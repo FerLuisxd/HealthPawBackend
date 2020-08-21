@@ -1,7 +1,8 @@
-service: health-paw-backend
+service: 
+    name: health-paw-backend
 
 plugins:
-    - serverless-plugin-typescript
+    - serverless-webpack
     - serverless-plugin-optimize
     - serverless-offline
 

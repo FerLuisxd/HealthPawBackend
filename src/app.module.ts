@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PersonController } from './person/person.controller';
-import { PersonModule } from './person/person.module';
+import { PersonController } from './modules/person/person.controller';
+import { PersonModule } from './modules/person/person.module';
 
 @Module({
   imports: [PersonModule],
