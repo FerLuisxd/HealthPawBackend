@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class PersonService {
+export class UserService {
     constructor(){
         
     }
-    getPersons(): any {
+    getUsers(): any {
       return []
     }
-    getPerson(id: string): any {
+    getUser(id: string): any {
       return {}
     }
-    addPerson(): any {
+    addUser(): any {
       return {}
     }
-    updatePerson( id: string): any {
+    updateUser( id: string): any {
       return {}
     }
-    deletePerson( id: string): any {
+    deleteUser( id: string): any {
       return {}
     }
 }
