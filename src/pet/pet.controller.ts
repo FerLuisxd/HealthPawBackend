@@ -12,7 +12,7 @@ export class PetController {
         return this.petService.getPets();
     }
 
-    @ApiParam({ name: 'id', type: 'string', example: '784521321', description: 'Pet Document' })
+    @ApiParam({ name: 'id', type: 'string', example: '076b508b-ae91-4902-925d-37743bd0ddd2', description: 'Pet Document' })
     @ApiResponse({ status: 200, type: Pet, description: 'Returns one Pet' })
     @Get('/:id')
     async getPet(@Param('id') id: string) {
