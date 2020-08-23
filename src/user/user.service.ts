@@ -10,9 +10,10 @@ export class UserService {
     this.tableName = 'user'
   }
   async getUsers(): Promise<any> {
-    let res = await this.ddb.get({TableName:'user',Key:{}}).promise() 
-    return res.Item
+    let res = await this.ddb.scan({TableName:'user'}).promise()
+    return res.Items
   }
+
   async getUser(id: string): Promise<any> {
     return await this.ddb.get({TableName:'user',Key:{'documentNumber':id}}).promise()
   }
