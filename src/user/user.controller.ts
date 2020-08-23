@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './user.entity';
+import { User, UserPet } from './user.entity';
 import { ApiParam, ApiResponse } from '@nestjs/swagger';
 
 @Controller('user')
@@ -24,6 +24,11 @@ export class UserController {
   @Put('/:id')
   async updateUser(@Param('id') id: string) {
     return this.userService.updateUser(id);
+  }
+  @Put('/:id/pet/')
+  @ApiResponse({ status: 200, type: User, description: 'Returns one User' })
+  async addPetToUser(@Param('id') id: string,@Body() pet: UserPet) {
+    return this.userService.addPetToUser(id,pet);
   }
   @Delete('/:id')
   async deleteUser(@Param('id') id: string) {

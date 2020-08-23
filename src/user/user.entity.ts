@@ -8,6 +8,12 @@ export class UserClinic {
     @ApiProperty({ example: 'PetHealth', type: String })
     name: string
 }
+export class UserPet {
+    @ApiProperty({ example: 'c8d97199-44d1-4b0b-9d6a-1637d9302f83', type: String })
+    id: string
+    @ApiProperty({ example: 'Firulais', type: String })
+    name: string
+}
 
 export class User {
     @ApiProperty({ example: 'name', type: String })
@@ -36,8 +42,8 @@ export class User {
     DayofRegistration: string
     @ApiProperty({ example: 2, type: Number })
     type: number
-    @ApiProperty({ example: [{ "id": "c8d97199-44d1-4b0b-9d6a-1637d9302f83", "name": "Firulais" }], type: Array, isArray: true })
-    pets: Array<object>
+    @ApiProperty({ type: UserPet, isArray: true })
+    pets: Array<UserPet>
     @ApiProperty({ type: UserClinic })
     clinic: UserClinic
 }
