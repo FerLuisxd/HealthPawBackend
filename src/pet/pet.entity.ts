@@ -7,8 +7,6 @@ export class Pet {
     @IsNotEmpty()
     @ApiProperty({ example: 'c8d97199-44d1-4b0b-9d6a-1637d9302f82', type: String })
     id: string
-    @ApiProperty({ example: '732409753', type: String })
-    documentNumber: string
     @ApiProperty({ example: 'name', type: String })
     name: string
     @ApiProperty({ example: 'breed', type: String })
