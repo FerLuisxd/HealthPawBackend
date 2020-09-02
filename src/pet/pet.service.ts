@@ -47,7 +47,10 @@ export class PetService {
                 + "enabled = :enabled "
                 + "petType = :petType "
                 + "alerts = :alerts "
-                + "variables = :variables "
+                + "heartRate = :heartRate "
+                + "breathingFrequency = :breathingFrequency "
+                + "sound = :sound "
+                + "temperature = :temperature "
                 + "recommendations = :recommendations",
             ExpressionAttributeValues: {
                 ":name": pet.name,
@@ -60,7 +63,10 @@ export class PetService {
                 ":enabled": pet.enabled,
                 ":petType": pet.petType,
                 ":alerts": pet.alerts,
-                ":variables": pet.variables,
+                ":heartRate": pet.heartRate,
+                ":breathingFrequency": pet.breathingFrequency,
+                ":sound": pet.sound,
+                ":temperature": pet.temperature,
                 ":recommendations": pet.recommendations
             },
             ReturnValues: "UPDATED_NEW"

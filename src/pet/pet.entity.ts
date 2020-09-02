@@ -26,9 +26,68 @@ export class Pet {
     @ApiProperty({ example: 'perro', type: String })
     petType: string
     @ApiProperty({ example: [{ "id": "c8d97199-44d1-4b0b-9d6a-1637d9302f83", "description": "Respiración baja" }], type: Array, isArray: true })
-    alerts: Array<object>
-    @ApiProperty({ example: [{ "id": "c8d97199-44d1-4b0b-9d6a-1637d9302f83", "name": "Firulais", "status": "Stable", "minimum": 1.30, "maximum": 1.50, "timestamp": new Date().getTime() }], type: Array, isArray: true })
-    variables: Array<object>
+    alerts: Array<object> // TODO: DEFINE
+    @ApiProperty({
+        example: [{
+            "variable": "Ritmo cardiaco",
+            "status": "Stable",
+            "minimum": 10,
+            "maximum": 20,
+            "history": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ]
+        }], type: Array, isArray: true
+    })
+    heartRate: Array<object>
+    @ApiProperty({
+        example: [{
+            "variable": "Frecuencia respiratoria",
+            "status": "Stable",
+            "minimum": 10,
+            "maximum": 20,
+            "history": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ]
+        }], type: Array, isArray: true
+    })
+    breathingFrequency: Array<object>
+    @ApiProperty({
+        example: [{
+            "variable": "Sonido",
+            "status": "Stable",
+            "minimum": 10,
+            "maximum": 20,
+            "history": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ]
+        }], type: Array, isArray: true
+    })
+    sound: Array<object>
+    @ApiProperty({
+        example: [{
+            "variable": "Temperatura",
+            "status": "Stable",
+            "minimum": 10,
+            "maximum": 20,
+            "history": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ]
+        }], type: Array, isArray: true
+    })
+    temperature: Array<object>
+
     @ApiProperty({ example: [{ "id": "c8d97199-44d1-4b0b-9d6a-1637d9302f83", "description": "Tomar más agua", "date": "2020-08-07T00:57:50-05:00" }], type: Array, isArray: true })
     recommendations: Array<object>
 }
