@@ -19,12 +19,11 @@ export class UserController {
   }
   @Post()
   async addUser(@Body() body: User) {
-    return body;
-    //return await this.userService.addUser(body);
+    return await this.userService.addUser(body);
   }
   @Put('/:id')
-  async updateUser(@Param('id') id: string) {
-    return this.userService.updateUser(id);
+  async updateUser(@Param('id') id: string,@Body() body: User) {
+    return this.userService.updateUser(id,body);
   }
   @Put('/:id/pet/')
   @ApiResponse({ status: 200, type: User, description: 'Returns one User' })

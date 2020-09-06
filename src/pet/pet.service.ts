@@ -38,20 +38,20 @@ export class PetService {
             UpdateExpression:
                 "set "
                 + "name = :name "
-                + "breed = :breed "
-                + "size = :size "
-                + "weigth = :weigth "
-                + "image = :image "
-                + "birthDay = :birthDay "
-                + "dayOfRegistration = :dayOfRegistration "
-                + "enabled = :enabled "
-                + "petType = :petType "
-                + "alerts = :alerts "
-                + "heartRate = :heartRate "
-                + "breathingFrequency = :breathingFrequency "
-                + "sound = :sound "
-                + "temperature = :temperature "
-                + "recommendations = :recommendations",
+                + ",breed = :breed "
+                + ",size = :size "
+                + ",weigth = :weigth "
+                + ",image = :image "
+                + ",birthDay = :birthDay "
+                + ",dayOfRegistration = :dayOfRegistration "
+                + ",enabled = :enabled "
+                + ",petType = :petType "
+                + ",alerts = :alerts "
+                + ",heartRate = :heartRate "
+                + ",breathingFrequency = :breathingFrequency "
+                + ",sound = :sound "
+                + ",temperature = :temperature "
+                + ",recommendations = :recommendations",
             ExpressionAttributeValues: {
                 ":name": pet.name,
                 ":breed": pet.breed,

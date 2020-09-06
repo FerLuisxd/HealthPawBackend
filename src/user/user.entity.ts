@@ -1,6 +1,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsEmail, IsString, IsNumber, IsBoolean, IsObject } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsNumber, IsBoolean, IsObject, IsOptional } from 'class-validator';
 
 export class UserClinic {
     @ApiProperty({ example: 'c8d97199-44d1-4b0b-9d6a-1637d9302f85', type: String })
@@ -28,18 +28,20 @@ export class User {
     id: string
     @ApiProperty({ example: 'fsadsafsadgas', type: String })
     password: string
+    @IsOptional()
     @IsEmail()
     @ApiProperty({ example: 'test@test.com', type: String })
     email: string
     @ApiProperty({ example: 999351872, type: Number })
     phone: number
-    @IsNotEmpty()
     @ApiProperty({ example: '732409753', type: String })
     documentNumber: string
     @ApiProperty({ example: '2020-08-07T00:57:50-05:00', type: String })
     birthDay: string
     @ApiProperty({ example: '2020-08-07T00:57:50-05:00', type: String })
-    DayofRegistration: string
+    dayofRegistration: string
+    @ApiProperty({ example: true, type: Boolean })
+    active: boolean
     @ApiProperty({ example: 2, type: Number })
     type: number
     @ApiProperty({ type: UserPet, isArray: true })
