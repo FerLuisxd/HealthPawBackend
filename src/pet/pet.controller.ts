@@ -25,8 +25,8 @@ export class PetController {
     }
 
     @Put('/:id')
-    async updatePet(@Body() body: Pet) {
-        return this.petService.updatePet(body);
+    async updatePet(@Param('id') id :string ,@Body() body: Pet) {
+        return this.petService.updatePet(id,body);
     }
     
     @Delete('/:id')
