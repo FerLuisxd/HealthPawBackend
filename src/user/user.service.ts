@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import * as AWS from 'aws-sdk'
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt'
@@ -24,6 +24,17 @@ export class UserService {
       return response.Item
     }
     else throw new NotFoundException()
+  }
+  async login(body: User): Promise<any> {
+    if (!body.documentNumber) throw new BadRequestException('documentNumber is required')
+    if (!body.password) throw new BadRequestException('password is required')
+    let response = (await this.ddb.get({ TableName: 'user', Key: { 'documentNumber': body.documentNumber } }).promise())
+    if(response.Item){
+      let same = await bcrypt.compare(body.password, response.Item.password)
+      if(same) return { "message": "sucess" }
+      else throw new UnauthorizedException()
+    }
+    else throw new UnauthorizedException()
   }
   async addUser(body: User): Promise<any> {
     if (!body.documentNumber) throw new BadRequestException('documentNumber is required')

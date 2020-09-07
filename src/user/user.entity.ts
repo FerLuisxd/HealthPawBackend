@@ -24,8 +24,6 @@ export class User {
     secondLastName: string
     @ApiProperty({ example: 'www.image.com/image.jpg', type: String })
     image: string
-    @ApiProperty({ example: 'c8d97199-44d1-4b0b-9d6a-1637d9302f82', type: String })
-    id: string
     @ApiProperty({ example: 'fsadsafsadgas', type: String })
     password: string
     @IsOptional()

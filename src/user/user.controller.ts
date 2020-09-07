@@ -21,6 +21,10 @@ export class UserController {
   async addUser(@Body() body: User) {
     return await this.userService.addUser(body);
   }
+  @Post('/login')
+  async login(@Body() body: User) {
+    return await this.userService.login(body);
+  }
   @Put('/:id')
   async updateUser(@Param('id') id: string,@Body() body: User) {
     return this.userService.updateUser(id,body);
