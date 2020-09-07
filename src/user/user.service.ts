@@ -26,10 +26,11 @@ export class UserService {
     else throw new NotFoundException()
   }
   async addUser(body: User): Promise<any> {
-    if (body.documentNumber) throw new BadRequestException('documentNumber is required')
+    if (!body.documentNumber) throw new BadRequestException('documentNumber is required')
     let salt = bcrypt.genSaltSync(10);
     let hash = bcrypt.hashSync(body.password, salt);
     body.dayofRegistration = moment().toISOString()
+    body.pets = []
     if(body.birthDay) body.birthDay = moment(body.birthDay).toISOString()
     body.active = true
     body.password = hash
@@ -51,17 +52,12 @@ export class UserService {
     let keys = Object.keys(body)
     for (let index = 0; index < keys.length; index++) {
       let variable = keys[index];
-      if (variable == "name")
-        query += `namevar= :namevar`
-      else
         query += `${variable} = :${variable}`
 
       if (index < keys.length - 1) {
         query += ','
       }
-
     }
-    console.log(query)
     let params = {
       TableName: this.tableName,
       Key: {
@@ -76,7 +72,7 @@ export class UserService {
         ":email": body.email,
         ":image": body.image,
         ":lastName": body.lastName,
-        ":namevar": body.name,
+        ":namevar": body.namevar,
         ":password": body.password,
         ":phone": body.phone,
         ":secondLastName": body.secondLastName
@@ -100,7 +96,11 @@ export class UserService {
     };
 
     let res = await this.ddb.update(params).promise()
-    return res.Attributes
+    if(res.Attributes){
+      res.Attributes.password = undefined
+      return res.Attributes
+    }
+    else throw new NotFoundException()
   }
   deleteUser(id: string): any {
     return {}

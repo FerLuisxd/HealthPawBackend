@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as AWS from 'aws-sdk'
 import { Pet } from './pet.entity';
-
+import { v4 as uuidv4 } from 'uuid';
+import * as moment from 'moment'
 @Injectable()
 export class PetService {
     ddb: AWS.DynamoDB.DocumentClient;
@@ -17,50 +18,58 @@ export class PetService {
     }
 
     async getPet(id: string): Promise<any> {
-        return await this.ddb.get({ TableName: this.tableName, Key: { 'documentNumber': id } }).promise()
+        let res = await this.ddb.get({ TableName: this.tableName, Key: { 'id': id } }).promise()
+        if(res.Item){
+            return res.Item
+        }
+        throw new NotFoundException()
     }
 
-    async addPet(body: any): Promise<any> {
+    async addPet(body: Pet): Promise<any> {
+        body.id  = uuidv4();
+        body.dayOfRegistration = moment().toISOString()
+        if(body.birthDay) body.birthDay = moment(body.birthDay).toISOString()
+        body.alerts = []
+        body.breathingFrequency = []
+        body.heartRate = []
+        body.recommendations = []
+        body.sound = []
+        body.temperature = []
         let params = {
             TableName: this.tableName,
             Item: body
         }
         await this.ddb.put(params).promise()
-        return { "message": "success" }
+        return { "message": "sucess" , "id" : body.id }
     }
 
-    async updatePet(pet: Pet): Promise<any> {
+    async updatePet(id:string,pet: Pet): Promise<any> {
+        if(pet.birthDay) pet.birthDay = moment(pet.birthDay).toISOString()
+        let query = "set "
+        let keys = Object.keys(pet)
+        for (let index = 0; index < keys.length; index++) {
+          let variable = keys[index];
+            query += `${variable} = :${variable}`
+    
+          if (index < keys.length - 1) {
+            query += ','
+          }
+        }
         let params = {
             TableName: this.tableName,
             Key: {
-                "id": pet.id
+                "id": id
             },
-            UpdateExpression:
-                "set "
-                + "name = :name "
-                + ",breed = :breed "
-                + ",size = :size "
-                + ",weigth = :weigth "
-                + ",image = :image "
-                + ",birthDay = :birthDay "
-                + ",dayOfRegistration = :dayOfRegistration "
-                + ",enabled = :enabled "
-                + ",petType = :petType "
-                + ",alerts = :alerts "
-                + ",heartRate = :heartRate "
-                + ",breathingFrequency = :breathingFrequency "
-                + ",sound = :sound "
-                + ",temperature = :temperature "
-                + ",recommendations = :recommendations",
+            UpdateExpression:query,
             ExpressionAttributeValues: {
-                ":name": pet.name,
+                ":namevar": pet.namevar,
                 ":breed": pet.breed,
                 ":size": pet.size,
                 ":weigth": pet.weigth,
                 ":image": pet.image,
                 ":birthDay": pet.birthDay,
                 ":dayOfRegistration": pet.dayOfRegistration,
-                ":enabled": pet.enabled,
+                ":active": pet.active,
                 ":petType": pet.petType,
                 ":alerts": pet.alerts,
                 ":heartRate": pet.heartRate,

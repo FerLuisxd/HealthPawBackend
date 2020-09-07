@@ -6,18 +6,18 @@ export class UserClinic {
     @ApiProperty({ example: 'c8d97199-44d1-4b0b-9d6a-1637d9302f85', type: String })
     id: string
     @ApiProperty({ example: 'PetHealth', type: String })
-    name: string
+    namevar: string
 }
 export class UserPet {
     @ApiProperty({ example: 'c8d97199-44d1-4b0b-9d6a-1637d9302f83', type: String })
     id: string
     @ApiProperty({ example: 'Firulais', type: String })
-    name: string
+    namevar: string
 }
 
 export class User {
-    @ApiProperty({ example: 'name', type: String })
-    name: string
+    @ApiProperty({ example: 'namevar', type: String })
+    namevar: string
     @ApiProperty({ example: 'lastName', type: String })
     lastName: string
     @ApiProperty({ example: 'secondLastName', type: String })
