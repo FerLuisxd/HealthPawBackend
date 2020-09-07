@@ -31,7 +31,8 @@ export class UserService {
     let response = (await this.ddb.get({ TableName: 'user', Key: { 'documentNumber': body.documentNumber } }).promise())
     if(response.Item){
       let same = await bcrypt.compare(body.password, response.Item.password)
-      if(same) return { "message": "sucess" }
+      response.Item.password = undefined
+      if(same) return response.Item
       else throw new UnauthorizedException()
     }
     else throw new UnauthorizedException()
