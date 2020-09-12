@@ -51,7 +51,8 @@ export class UserService {
       Item: body
     }
     await this.ddb.put(params).promise()
-    return { "message": "sucess" }
+    body.password = undefined
+    return body
   }
   async updateUser(id: string, body: User): Promise<any> {
     if (body.password) {
