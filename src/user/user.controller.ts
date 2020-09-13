@@ -29,10 +29,15 @@ export class UserController {
   async updateUser(@Param('id') id: string,@Body() body: User) {
     return this.userService.updateUser(id,body);
   }
-  @Put('/:id/pet/')
+  @Put('/:id/addPet/')
   @ApiResponse({ status: 200, type: User, description: 'Returns one User' })
   async addPetToUser(@Param('id') id: string,@Body() pet: UserPet) {
     return this.userService.addPetToUser(id,pet);
+  }
+  @Put('/:id/editPet/')
+  @ApiResponse({ status: 200, type: User, description: 'Returns one User' })
+  async updatePetToUser(@Param('id') id: string,@Body() pet: UserPet) {
+    return this.userService.editPetToUser(id,pet);
   }
   @Delete('/:id')
   async deleteUser(@Param('id') id: string) {

@@ -51,7 +51,8 @@ export class UserService {
       Item: body
     }
     await this.ddb.put(params).promise()
-    return { "message": "sucess" }
+    body.password = undefined
+    return body
   }
   async updateUser(id: string, body: User): Promise<any> {
     if (body.password) {
@@ -103,6 +104,32 @@ export class UserService {
       UpdateExpression: "set pets = list_append(pets,:p)",
       ExpressionAttributeValues: {
         ":p": [pet]
+      },
+      ReturnValues: "ALL_NEW"
+    };
+
+    let res = await this.ddb.update(params).promise()
+    if(res.Attributes){
+      res.Attributes.password = undefined
+      return res.Attributes
+    }
+    else throw new NotFoundException()
+  }
+  async editPetToUser(id: string, pet: Object): Promise<any> {
+    let user = (await this.ddb.get({ TableName: 'user', Key: { 'documentNumber': id } }).promise())
+    user.Item.pets.forEach(element => {
+      if (element.id === pet["id"]) {
+        element.namevar = pet["namevar"];
+      }
+    });
+    var params = {
+      TableName: this.tableName,
+      Key: {
+        "documentNumber": id
+      },
+      UpdateExpression: "set pets = :p",
+      ExpressionAttributeValues: {
+        ":p": user.Item.pets,
       },
       ReturnValues: "ALL_NEW"
     };
