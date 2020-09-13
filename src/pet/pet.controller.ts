@@ -1,7 +1,7 @@
-import { Controller, Get, Param, Post, Put, Delete, Body } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Delete, Body, Query } from '@nestjs/common';
 import { PetService } from './pet.service';
-import { ApiParam, ApiResponse } from '@nestjs/swagger';
-import { Pet } from './pet.entity';
+import { ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { Pet, Stadistics } from './pet.entity';
 
 @Controller('pet')
 export class PetController {
@@ -22,6 +22,12 @@ export class PetController {
     @Post()
     async addPet(@Body() body: Pet) {
         return await this.petService.addPet(body);
+    }
+
+    @Put('/stadistics/:id')
+    @ApiParam({ name: 'id', type: 'string', example: '076b508b-ae91-4902-925d-37743bd0ddd2', description: 'Pet Document' })
+    async updatePetStadistic(@Param('id') id :string ,@Body() body: Stadistics) {
+        return this.petService.updatePetStadistic(id,body);
     }
 
     @Put('/:id')

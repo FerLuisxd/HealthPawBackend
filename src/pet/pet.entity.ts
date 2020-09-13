@@ -27,66 +27,101 @@ export class Pet {
     @ApiProperty({ example: [{ "id": "c8d97199-44d1-4b0b-9d6a-1637d9302f83", "description": "Respiración baja" }], type: Array, isArray: true })
     alerts: Array<object> // TODO: DEFINE
     @ApiProperty({
-        example: [{
+        example: {
             "variable": "Ritmo cardiaco",
             "status": "Stable",
             "minimum": 10,
             "maximum": 20,
+            "average": 15,
+            "todayHistory": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ],
             "history": [
                 {
                     "timestamp": new Date().getTime(),
                     "value": 15.5
                 }
             ]
-        }], type: Array, isArray: true
+        }, type: Object
     })
-    heartRate: Array<object>
+    heartRate: Object
     @ApiProperty({
-        example: [{
+        example: {
             "variable": "Frecuencia respiratoria",
             "status": "Stable",
             "minimum": 10,
             "maximum": 20,
+            "average": 15,
+            "todayHistory": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ],
             "history": [
                 {
                     "timestamp": new Date().getTime(),
                     "value": 15.5
                 }
             ]
-        }], type: Array, isArray: true
+        }, type: Array, isArray: true
     })
-    breathingFrequency: Array<object>
+    breathingFrequency: Object
     @ApiProperty({
-        example: [{
+        example: {
             "variable": "Sonido",
             "status": "Stable",
             "minimum": 10,
             "maximum": 20,
+            "average": 15,
+            "todayHistory": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ],
             "history": [
                 {
                     "timestamp": new Date().getTime(),
                     "value": 15.5
                 }
             ]
-        }], type: Array, isArray: true
+        }, type: Array, isArray: true
     })
-    sound: Array<object>
+    sound: Object
     @ApiProperty({
-        example: [{
+        example: {
             "variable": "Temperatura",
             "status": "Stable",
             "minimum": 10,
             "maximum": 20,
+            "average": 15,
+            "todayHistory": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ],
             "history": [
                 {
                     "timestamp": new Date().getTime(),
                     "value": 15.5
                 }
             ]
-        }], type: Array, isArray: true
+        }, type: Object
     })
-    temperature: Array<object>
+    temperature: Object
 
     @ApiProperty({ example: [{ "id": "c8d97199-44d1-4b0b-9d6a-1637d9302f83", "description": "Tomar más agua", "date": "2020-08-07T00:57:50-05:00" }], type: Array, isArray: true })
     recommendations: Array<object>
+}
+
+export class Stadistics {
+    temperature : number
+    heartRate : number
+    breathingFrequency: number
+    sound : number
 }
