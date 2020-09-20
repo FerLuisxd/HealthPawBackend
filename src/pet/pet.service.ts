@@ -132,10 +132,16 @@ export class PetService {
             }
             const today = moment().set({ minute: 0, second: 0, millisecond: 0, hour: 0 })
             if (body.breathingFrequency) {
+                let _breath = 0
+                if (typeof body.breathingFrequency === 'string') {
+                    _breath = Number(body.breathingFrequency)
+                } else {
+                    _breath = body.breathingFrequency
+                }
                 let stadistic = pet.breathingFrequency // !!!
 
                 stadistic.todayHistory.push({
-                    value: body.breathingFrequency, //!!
+                    value: _breath, //!!
                     timestamp: moment().unix()
                 })
                 if (stadistic.todayHistory.length > this.intervalMax) {
@@ -156,7 +162,7 @@ export class PetService {
                 average = average / stadistic.todayHistory.length
                 if (newDay ||stadistic.todayHistory.length == 1 ) {
                     stadistic.history.push({
-                        value: body.breathingFrequency, // !!
+                        value: _breath, // !!
                         timestamp: today.unix()
                     })
                 }
@@ -170,10 +176,16 @@ export class PetService {
                 stadistic.average = average
             }
             if (body.heartRate) {
+                let _hearth = 0
+                if (typeof body.heartRate === 'string') {
+                    _hearth = Number(body.heartRate)
+                } else {
+                    _hearth = body.heartRate
+                }
                 let stadistic = pet.heartRate // !!!
 
                 stadistic.todayHistory.push({
-                    value: body.heartRate, //!!
+                    value: _hearth, //!!
                     timestamp: moment().unix()
                 })
                 if (stadistic.todayHistory.length > this.intervalMax) {
@@ -194,7 +206,7 @@ export class PetService {
                 average = average / stadistic.todayHistory.length
                 if (newDay ||stadistic.todayHistory.length == 1 ) {
                     stadistic.history.push({
-                        value: body.heartRate, // !!
+                        value: _hearth, // !!
                         timestamp: today.unix()
                     })
                 }
@@ -208,10 +220,16 @@ export class PetService {
                 stadistic.average = average
             }
             if (body.sound) {
+                let _sound = 0
+                if (typeof body.sound === 'string') {
+                    _sound = Number(body.sound)
+                } else {
+                    _sound = body.sound
+                }
                 let stadistic = pet.sound // !!!
 
                 stadistic.todayHistory.push({
-                    value: body.sound, //!!
+                    value: _sound, //!!
                     timestamp: moment().unix()
                 })
                 if (stadistic.todayHistory.length > this.intervalMax) {
@@ -232,7 +250,7 @@ export class PetService {
                 average = average / stadistic.todayHistory.length
                 if (newDay ||stadistic.todayHistory.length == 1 ) {
                     stadistic.history.push({
-                        value: body.sound, // !!
+                        value: _sound, // !!
                         timestamp: today.unix()
                     })
                 }
@@ -246,10 +264,16 @@ export class PetService {
                 stadistic.average = average
             }
             if (body.temperature) {
+                let _temperature = 0
+                if (typeof body.temperature === 'string') {
+                    _temperature = Number(body.temperature)
+                } else {
+                    _temperature = body.temperature
+                }
                 let stadistic = pet.temperature // !!!
 
                 stadistic.todayHistory.push({
-                    value: body.temperature, //!!
+                    value: _temperature, //!!
                     timestamp: moment().unix()
                 })
                 if (stadistic.todayHistory.length > this.intervalMax) {
@@ -270,7 +294,7 @@ export class PetService {
                 average = average / stadistic.todayHistory.length
                 if (newDay ||stadistic.todayHistory.length == 1 ) {
                     stadistic.history.push({
-                        value: body.temperature, // !!
+                        value: _temperature, // !!
                         timestamp: today.unix()
                     })
                 }
