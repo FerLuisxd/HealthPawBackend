@@ -98,7 +98,7 @@ export class PetService {
                 ":namevar": pet.namevar,
                 ":breed": pet.breed,
                 ":size": pet.size,
-                ":weigth": pet.weigth,
+                ":weight": pet.weight,
                 ":image": pet.image,
                 ":birthDay": pet.birthDay,
                 ":dayOfRegistration": pet.dayOfRegistration,

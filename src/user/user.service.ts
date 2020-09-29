@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, UnauthorizedException, HttpException } from '@nestjs/common';
 import * as AWS from 'aws-sdk'
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt'
@@ -96,6 +96,13 @@ export class UserService {
     return { "message": "sucess" };
   }
   async addPetToUser(id: string, pet: Object): Promise<any> {
+    let user = (await this.ddb.get({ TableName: 'user', Key: { 'documentNumber': id } }).promise())
+    if(!user.Item) return new HttpException('error', 500)
+    for (let i = 0; i < user.Item.pets.length; i++) {
+      const element = user.Item.pets[i];
+      if (element.id === pet["id"]) 
+        return new HttpException('already on array',409)
+    }
     var params = {
       TableName: this.tableName,
       Key: {
