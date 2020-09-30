@@ -144,9 +144,9 @@ export class PetService {
                     value: _breath, //!!
                     timestamp: moment().unix()
                 })
-                if (stadistic.todayHistory.length > this.intervalMax) {
-                    stadistic.todayHistory.splice(0, 1)
-                }
+                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                    return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
+                })
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
                
                 let min = stadistic.todayHistory[0].value
@@ -188,9 +188,9 @@ export class PetService {
                     value: _hearth, //!!
                     timestamp: moment().unix()
                 })
-                if (stadistic.todayHistory.length > this.intervalMax) {
-                    stadistic.todayHistory.splice(0, 1)
-                }
+                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                    return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
+                })
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
                
                 let min = stadistic.todayHistory[0].value
@@ -232,9 +232,9 @@ export class PetService {
                     value: _sound, //!!
                     timestamp: moment().unix()
                 })
-                if (stadistic.todayHistory.length > this.intervalMax) {
-                    stadistic.todayHistory.splice(0, 1)
-                }
+                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                    return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
+                })
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
                
                 let min = stadistic.todayHistory[0].value
@@ -276,9 +276,10 @@ export class PetService {
                     value: _temperature, //!!
                     timestamp: moment().unix()
                 })
-                if (stadistic.todayHistory.length > this.intervalMax) {
-                    stadistic.todayHistory.splice(0, 1)
-                }
+                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                    return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
+                })
+
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
                
                 let min = stadistic.todayHistory[0].value
