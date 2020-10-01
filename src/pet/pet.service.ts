@@ -109,6 +109,7 @@ export class PetService {
                 ":breathingFrequency": pet.breathingFrequency,
                 ":sound": pet.sound,
                 ":temperature": pet.temperature,
+                ":physicalActivity": pet.physicalActivity,
                 ":recommendations": pet.recommendations
             },
             ReturnValues: "UPDATED_NEW"
