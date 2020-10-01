@@ -114,6 +114,28 @@ export class Pet {
         }, type: Object
     })
     temperature: Object
+    @ApiProperty({
+        example: {
+            "variable": "Actividad Física",
+            "status": "Stable",
+            "minimum": 10,
+            "maximum": 20,
+            "average": 15,
+            "todayHistory": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ],
+            "history": [
+                {
+                    "timestamp": new Date().getTime(),
+                    "value": 15.5
+                }
+            ]
+        }, type: Object
+    })
+    physicalActivity: Object
 
     @ApiProperty({ example: [{ "id": "c8d97199-44d1-4b0b-9d6a-1637d9302f83", "description": "Tomar más agua", "date": "2020-08-07T00:57:50-05:00" }], type: Array, isArray: true })
     recommendations: Array<object>
