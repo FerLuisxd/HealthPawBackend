@@ -3,6 +3,7 @@ import * as AWS from 'aws-sdk'
 import { Pet, Stadistics } from './pet.entity';
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment'
+import * as momentTimeZone from 'moment-timezone'
 import { Cron } from '@nestjs/schedule';
 
 @Injectable()
@@ -374,7 +375,7 @@ export class PetService {
 
     @Cron('0 0 0 * * *', {'timeZone':'America/Lima'})
     async cronJobHours(){
-        const today = moment().set({ minute: 0, second: 0, millisecond: 0, hour: 0 })
+        const today = momentTimeZone().tz('America/Lima').set({ minute: 0, second: 0, millisecond: 0, hour: 0 })
         let pets = await this.getPets()
         for (let i = 0; i < pets.length; i++) {
             let current = pets[i]
