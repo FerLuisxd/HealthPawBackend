@@ -11,9 +11,17 @@ export class PetService {
     ddb: AWS.DynamoDB.DocumentClient;
     tableName: string = "pet";
     intervalMax: Number
+    maxBreathingValue: Number
+    maxSoundValue: Number
+    maxTemperatureValue: Number
+    maxHeartRateValue: Number
     constructor() {
         this.ddb = new AWS.DynamoDB.DocumentClient();
         this.intervalMax = 24 * 60 * 60 / 20
+        this.maxBreathingValue = 25
+        this.maxSoundValue = 25
+        this.maxTemperatureValue = 25
+        this.maxHeartRateValue = 25
     }
 
     async getPets(): Promise<any> {
@@ -121,12 +129,12 @@ export class PetService {
         return { "message": "sucess" };
     }
 
-    modifyArray(stadistic, today){
-        stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+    modifyArray(stadistic, today) {
+        stadistic.todayHistory = stadistic.todayHistory.filter(function (x) {
             return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
         })
         let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
-       
+
         let min = stadistic.todayHistory[0].value || 0
         let max = stadistic.todayHistory[0].value || 0
         let average = 0
@@ -138,7 +146,7 @@ export class PetService {
             average += stadistic.todayHistory[i].value
         }
         average = average / stadistic.todayHistory.length
-        if(!newDay) {
+        if (!newDay) {
             //Add to todayHistory
             let historyIndex = stadistic.history.findIndex(x => moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix())
             stadistic.history[historyIndex].value = average
@@ -178,11 +186,11 @@ export class PetService {
                     value: _breath, //!!
                     timestamp: moment().unix()
                 })
-                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                stadistic.todayHistory = stadistic.todayHistory.filter(function (x) {
                     return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
                 })
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
-               
+
                 let min = stadistic.todayHistory[0].value
                 let max = stadistic.todayHistory[0].value
                 let average = 0
@@ -194,13 +202,13 @@ export class PetService {
                     average += stadistic.todayHistory[i].value
                 }
                 average = average / stadistic.todayHistory.length
-                if (newDay ||stadistic.todayHistory.length == 1 ) {
+                if (newDay || stadistic.todayHistory.length == 1) {
                     stadistic.history.push({
                         value: _breath, // !!
                         timestamp: today.unix()
                     })
                 }
-                else if(!newDay) {
+                else if (!newDay) {
                     //Add to todayHistory
                     let historyIndex = stadistic.history.findIndex(x => moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix())
                     stadistic.history[historyIndex].value = average
@@ -222,11 +230,11 @@ export class PetService {
                     value: _hearth, //!!
                     timestamp: moment().unix()
                 })
-                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                stadistic.todayHistory = stadistic.todayHistory.filter(function (x) {
                     return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
                 })
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
-               
+
                 let min = stadistic.todayHistory[0].value
                 let max = stadistic.todayHistory[0].value
                 let average = 0
@@ -238,13 +246,13 @@ export class PetService {
                     average += stadistic.todayHistory[i].value
                 }
                 average = average / stadistic.todayHistory.length
-                if (newDay ||stadistic.todayHistory.length == 1 ) {
+                if (newDay || stadistic.todayHistory.length == 1) {
                     stadistic.history.push({
                         value: _hearth, // !!
                         timestamp: today.unix()
                     })
                 }
-                else if(!newDay) {
+                else if (!newDay) {
                     //Add to todayHistory
                     let historyIndex = stadistic.history.findIndex(x => moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix())
                     stadistic.history[historyIndex].value = average
@@ -266,11 +274,11 @@ export class PetService {
                     value: _sound, //!!
                     timestamp: moment().unix()
                 })
-                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                stadistic.todayHistory = stadistic.todayHistory.filter(function (x) {
                     return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
                 })
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
-               
+
                 let min = stadistic.todayHistory[0].value
                 let max = stadistic.todayHistory[0].value
                 let average = 0
@@ -282,13 +290,13 @@ export class PetService {
                     average += stadistic.todayHistory[i].value
                 }
                 average = average / stadistic.todayHistory.length
-                if (newDay ||stadistic.todayHistory.length == 1 ) {
+                if (newDay || stadistic.todayHistory.length == 1) {
                     stadistic.history.push({
                         value: _sound, // !!
                         timestamp: today.unix()
                     })
                 }
-                else if(!newDay) {
+                else if (!newDay) {
                     //Add to todayHistory
                     let historyIndex = stadistic.history.findIndex(x => moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix())
                     stadistic.history[historyIndex].value = average
@@ -310,12 +318,12 @@ export class PetService {
                     value: _temperature, //!!
                     timestamp: moment().unix()
                 })
-                stadistic.todayHistory = stadistic.todayHistory.filter(function(x) { 
+                stadistic.todayHistory = stadistic.todayHistory.filter(function (x) {
                     return moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix()
                 })
 
                 let newDay = today.unix() != moment.unix(stadistic.todayHistory[0].timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix()
-               
+
                 let min = stadistic.todayHistory[0].value
                 let max = stadistic.todayHistory[0].value
                 let average = 0
@@ -327,13 +335,13 @@ export class PetService {
                     average += stadistic.todayHistory[i].value
                 }
                 average = average / stadistic.todayHistory.length
-                if (newDay ||stadistic.todayHistory.length == 1 ) {
+                if (newDay || stadistic.todayHistory.length == 1) {
                     stadistic.history.push({
                         value: _temperature, // !!
                         timestamp: today.unix()
                     })
                 }
-                else if(!newDay) {
+                else if (!newDay) {
                     //Add to todayHistory
                     let historyIndex = stadistic.history.findIndex(x => moment.unix(x.timestamp).set({ minute: 0, second: 0, millisecond: 0, hour: 0 }).unix() == today.unix())
                     stadistic.history[historyIndex].value = average
@@ -373,23 +381,83 @@ export class PetService {
         return { "message": "sucess" };
     }
 
-    @Cron('0 0 0 * * *', {'timeZone':'America/Lima'})
-    async cronJobHours(){
+    @Cron('0 0 0 * * *', { 'timeZone': 'America/Lima' })
+    async cronJobHours() {
         const today = momentTimeZone().tz('America/Lima').set({ minute: 0, second: 0, millisecond: 0, hour: 0 })
         let pets = await this.getPets()
         for (let i = 0; i < pets.length; i++) {
             let current = pets[i]
             let obj = new Pet()
-            current.breathingFrequency = this.modifyArray(current.breathingFrequency,today )
+            current.breathingFrequency = this.modifyArray(current.breathingFrequency, today)
             obj.breathingFrequency = current.breathingFrequency
-            current.temperature = this.modifyArray(current.temperature,today )
+            current.temperature = this.modifyArray(current.temperature, today)
             obj.temperature = current.temperature
-            current.sound = this.modifyArray(current.sound,today )
+            current.sound = this.modifyArray(current.sound, today)
             obj.sound = current.sound
-            current.heartRate = this.modifyArray(current.heartRate,today )
+            current.heartRate = this.modifyArray(current.heartRate, today)
             obj.heartRate = current.heartRate
 
-            await this.updatePet(current.id,obj)
+            await this.updatePet(current.id, obj)
+        }
+    }
+
+    async sendNotificationsToUsers(alarms, arrayOfUsers) {
+        // (TODO) Modificar Aqui
+    }
+
+    @Cron('0 */15 * * * *', { 'timeZone': 'America/Lima' })
+    async cronJobEvery15() {
+// Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries compelejas.
+        let pets = await this.getPets()
+        let trueValue = true
+
+        let users = (await this.ddb.scan({ TableName: "user" }).promise()).Items;
+        for (let i = 0; i < pets.length; i++) {
+            let current = pets[i]
+            let breathingAlarm 
+            let temperatureAlarm 
+            let soundAlarm 
+            let heartRateAlarm 
+            let breathingIndex = current.breathingFrequency.todayHistory.findIndex(x => x > this.maxBreathingValue && (x.reported === undefined || x.reported === false))
+            if(breathingIndex != -1){
+                pets[i].breathingFrequency.todayHistory[breathingIndex].reported = trueValue
+                breathingAlarm = current.breathingFrequency.todayHistory[breathingIndex]
+            }
+            let temperatureIndex = current.temperature.todayHistory.findIndex(x => x > this.maxTemperatureValue && (x.reported === undefined || x.reported === false))
+            if(temperatureIndex != -1){
+                pets[i].temperature.todayHistory[temperatureIndex].reported = trueValue
+                temperatureAlarm = current.temperature.todayHistory[temperatureIndex]
+            }
+            let soundIndex =   current.sound.todayHistory.findIndex(x => x > this.maxSoundValue && (x.reported === undefined || x.reported === false))
+            if(soundIndex != -1){
+                pets[i].sound.todayHistory[soundIndex].reported = trueValue
+                soundAlarm = current.sound.todayHistory[soundIndex]
+            }
+            let heartRateIndex =   current.temperature.todayHistory.findIndex(x => x > this.maxHeartRateValue && (x.reported === undefined || x.reported === false))
+            if(heartRateIndex != -1){
+                pets[i].heartRate.todayHistory[heartRateIndex].reported = trueValue
+                heartRateAlarm = current.heartRate.todayHistory[heartRateIndex]
+            }
+          
+           
+            if (breathingAlarm || temperatureAlarm ||  soundAlarm ||heartRateAlarm ){
+                // Buscamos relacion
+                let arrayUsersWithPet = []
+                for (let j = 0; j < users.length; j++) {
+                    let petFound = users[j].pets.find((x) => x.id === current._id)
+                    if(petFound){
+                        arrayUsersWithPet.push(users[j])
+                    }
+                }
+                let alarms = {
+                    breathingAlarm ,
+                    temperatureAlarm,
+                    soundAlarm,
+                    heartRateAlarm
+                }
+                 this.sendNotificationsToUsers(alarms, arrayUsersWithPet)
+                 this.updatePet(current._id,pets[i])
+            }
             
         }
     }
