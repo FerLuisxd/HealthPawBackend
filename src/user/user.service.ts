@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, UnauthorizedException, HttpException } from '@nestjs/common';
 import * as AWS from 'aws-sdk'
 import { User } from './user.entity';
-import * as bcrypt from 'bcrypt'
+import * as bcryptjs from 'bcryptjs'
 import * as moment from 'moment'
 @Injectable()
 export class UserService {
@@ -30,7 +30,7 @@ export class UserService {
     if (!body.password) throw new BadRequestException('password is required')
     let response = (await this.ddb.get({ TableName: 'user', Key: { 'documentNumber': body.documentNumber } }).promise())
     if(response.Item){
-      let same = await bcrypt.compare(body.password, response.Item.password)
+      let same = await bcryptjs.compareSync(body.password, response.Item.password)
       response.Item.password = undefined
       if(same) return response.Item
       else throw new UnauthorizedException()
@@ -39,8 +39,8 @@ export class UserService {
   }
   async addUser(body: User): Promise<any> {
     if (!body.documentNumber) throw new BadRequestException('documentNumber is required')
-    let salt = bcrypt.genSaltSync(10);
-    let hash = bcrypt.hashSync(body.password, salt);
+    let salt = bcryptjs.genSaltSync(10);
+    let hash = bcryptjs.hashSync(body.password, salt);
     body.dayofRegistration = moment().toISOString()
     body.pets = []
     if(body.birthDay) body.birthDay = moment(body.birthDay).toISOString()
@@ -56,8 +56,8 @@ export class UserService {
   }
   async updateUser(id: string, body: User): Promise<any> {
     if (body.password) {
-      let salt = bcrypt.genSaltSync(10);
-      let hash = bcrypt.hashSync(body.password, salt);
+      let salt = bcryptjs.genSaltSync(10);
+      let hash = bcryptjs.hashSync(body.password, salt);
       body.password = hash
     }
     if(body.birthDay) body.birthDay = moment(body.birthDay).toISOString()
