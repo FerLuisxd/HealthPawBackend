@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './utils/allExeptionsFilter';
 import * as AWS from "aws-sdk"
+import * as admin from 'firebase-admin';
 
 async function bootstrap() {
   try {

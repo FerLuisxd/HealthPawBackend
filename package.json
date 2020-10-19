@@ -30,6 +30,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
+    "firebase-admin": "^9.2.0",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
     "reflect-metadata": "^0.1.13",
