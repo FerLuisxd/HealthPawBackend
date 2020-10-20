@@ -405,61 +405,67 @@ export class PetService {
         // (TODO) Modificar Aqui
     }
 
-    @Cron('0 */15 * * * *', { 'timeZone': 'America/Lima' })
+    @Cron('0 */1 * * * *', { 'timeZone': 'America/Lima' })
     async cronJobEvery15() {
-// Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries compelejas.
-        let pets = await this.getPets()
-        let trueValue = true
+        // Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries compelejas.
+        try {
+            let pets = await this.getPets()
+            let trueValue = true
 
-        let users = (await this.ddb.scan({ TableName: "user" }).promise()).Items;
-        for (let i = 0; i < pets.length; i++) {
-            let current = pets[i]
-            let breathingAlarm 
-            let temperatureAlarm 
-            let soundAlarm 
-            let heartRateAlarm 
-            let breathingIndex = current.breathingFrequency.todayHistory.findIndex(x => x > this.maxBreathingValue && (x.reported === undefined || x.reported === false))
-            if(breathingIndex != -1){
-                pets[i].breathingFrequency.todayHistory[breathingIndex].reported = trueValue
-                breathingAlarm = current.breathingFrequency.todayHistory[breathingIndex]
-            }
-            let temperatureIndex = current.temperature.todayHistory.findIndex(x => x > this.maxTemperatureValue && (x.reported === undefined || x.reported === false))
-            if(temperatureIndex != -1){
-                pets[i].temperature.todayHistory[temperatureIndex].reported = trueValue
-                temperatureAlarm = current.temperature.todayHistory[temperatureIndex]
-            }
-            let soundIndex =   current.sound.todayHistory.findIndex(x => x > this.maxSoundValue && (x.reported === undefined || x.reported === false))
-            if(soundIndex != -1){
-                pets[i].sound.todayHistory[soundIndex].reported = trueValue
-                soundAlarm = current.sound.todayHistory[soundIndex]
-            }
-            let heartRateIndex =   current.temperature.todayHistory.findIndex(x => x > this.maxHeartRateValue && (x.reported === undefined || x.reported === false))
-            if(heartRateIndex != -1){
-                pets[i].heartRate.todayHistory[heartRateIndex].reported = trueValue
-                heartRateAlarm = current.heartRate.todayHistory[heartRateIndex]
-            }
-          
-           
-            if (breathingAlarm || temperatureAlarm ||  soundAlarm ||heartRateAlarm ){
-                // Buscamos relacion
-                let arrayUsersWithPet = []
-                for (let j = 0; j < users.length; j++) {
-                    let petFound = users[j].pets.find((x) => x.id === current._id)
-                    if(petFound){
-                        arrayUsersWithPet.push(users[j])
+            let users = (await this.ddb.scan({ TableName: "user" }).promise()).Items;
+            for (let i = 0; i < pets.length; i++) {
+                let current = pets[i]
+                let breathingAlarm
+                let temperatureAlarm
+                let soundAlarm
+                let heartRateAlarm
+                let breathingIndex = current.breathingFrequency.todayHistory.findIndex(x => x > this.maxBreathingValue && (x.reported === undefined || x.reported === false))
+                if (breathingIndex != -1) {
+                    pets[i].breathingFrequency.todayHistory[breathingIndex].reported = trueValue
+                    breathingAlarm = current.breathingFrequency.todayHistory[breathingIndex]
+                }
+                let temperatureIndex = current.temperature.todayHistory.findIndex(x => x > this.maxTemperatureValue && (x.reported === undefined || x.reported === false))
+                if (temperatureIndex != -1) {
+                    pets[i].temperature.todayHistory[temperatureIndex].reported = trueValue
+                    temperatureAlarm = current.temperature.todayHistory[temperatureIndex]
+                }
+                let soundIndex = current.sound.todayHistory.findIndex(x => x > this.maxSoundValue && (x.reported === undefined || x.reported === false))
+                if (soundIndex != -1) {
+                    pets[i].sound.todayHistory[soundIndex].reported = trueValue
+                    soundAlarm = current.sound.todayHistory[soundIndex]
+                }
+                let heartRateIndex = current.temperature.todayHistory.findIndex(x => x > this.maxHeartRateValue && (x.reported === undefined || x.reported === false))
+                if (heartRateIndex != -1) {
+                    pets[i].heartRate.todayHistory[heartRateIndex].reported = trueValue
+                    heartRateAlarm = current.heartRate.todayHistory[heartRateIndex]
+                }
+
+
+                if (breathingAlarm || temperatureAlarm || soundAlarm || heartRateAlarm) {
+                    // Buscamos relacion
+                    let arrayUsersWithPet = []
+                    for (let j = 0; j < users.length; j++) {
+                        let petFound = users[j].pets.find((x) => x.id === current._id)
+                        if (petFound) {
+                            arrayUsersWithPet.push(users[j])
+                        }
                     }
+                    let alarms = {
+                        breathingAlarm,
+                        temperatureAlarm,
+                        soundAlarm,
+                        heartRateAlarm
+                    }
+                    this.sendNotificationsToUsers(alarms, arrayUsersWithPet)
+                    this.updatePet(current._id, pets[i])
                 }
-                let alarms = {
-                    breathingAlarm ,
-                    temperatureAlarm,
-                    soundAlarm,
-                    heartRateAlarm
-                }
-                 this.sendNotificationsToUsers(alarms, arrayUsersWithPet)
-                 this.updatePet(current._id,pets[i])
+
             }
-            
         }
+        catch (e) {
+            console.log('ERROR CRONJOB', e)
+        }
+
     }
 
 }
