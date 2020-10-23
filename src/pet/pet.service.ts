@@ -405,13 +405,14 @@ export class PetService {
     async sendNotificationsToUsers(alarms, arrayOfUsers, pet) {
         // (TODO) Modificar Aqui
         let title = `Ten cuidado con ${pet.namevar}`;
-        let message = `${alarms.breathingAlarm ? 'Frecuencia respiratoria fuera de rango\n' : '\n'}${alarms.temperatureAlarm ? 'Temperatura fuera de rango\n' : '\n'}${alarms.soundAlarm ? 'Sonido fuera de rango\n' : '\n'}${alarms.heartRateAlarm ? 'Frecuencia cardiaca fuera de rango\n' : '\n'}`;
-        var tokens: string[]
+        let message = `${alarms.breathingAlarm ? 'Frecuencia respiratoria fuera de rango\n' : ''}${alarms.temperatureAlarm ? 'Temperatura fuera de rango\n' : ''}${alarms.soundAlarm ? 'Sonido fuera de rango\n' : ''}${alarms.heartRateAlarm ? 'Frecuencia cardiaca fuera de rango\n' : ''}`;
+        let tokens = []
         for (let i = 0; i < arrayOfUsers.length; i++) {
             if (arrayOfUsers[i].fmcToken) {
                 tokens.push(arrayOfUsers[i].fmcToken);
             }
         }
+        
         admin.messaging().sendMulticast({
             tokens: tokens,
             notification: {
@@ -421,7 +422,7 @@ export class PetService {
         });
     }
 
-    @Cron('0 */1 * * * *', { 'timeZone': 'America/Lima' })
+    @Cron('0 */15 * * * *', { 'timeZone': 'America/Lima' })
     async cronJobEvery15() {
         // Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries compelejas.
         try {
@@ -435,44 +436,46 @@ export class PetService {
                 let temperatureAlarm
                 let soundAlarm
                 let heartRateAlarm
-                let breathingIndex = current.breathingFrequency.todayHistory.findIndex(x => x > this.maxBreathingValue && (x.reported === undefined || x.reported === false))
+                let breathingIndex = current.breathingFrequency.todayHistory ? current.breathingFrequency.todayHistory.findIndex(x => x.value > this.maxBreathingValue && (x.reported === undefined || x.reported === false)) : -1
                 if (breathingIndex != -1) {
                     pets[i].breathingFrequency.todayHistory[breathingIndex].reported = trueValue
                     breathingAlarm = current.breathingFrequency.todayHistory[breathingIndex]
                 }
-                let temperatureIndex = current.temperature.todayHistory.findIndex(x => x > this.maxTemperatureValue && (x.reported === undefined || x.reported === false))
+                let temperatureIndex = current.temperature.todayHistory ? current.temperature.todayHistory.findIndex(x => x.value > this.maxTemperatureValue && (x.reported === undefined || x.reported === false)) : -1
                 if (temperatureIndex != -1) {
                     pets[i].temperature.todayHistory[temperatureIndex].reported = trueValue
                     temperatureAlarm = current.temperature.todayHistory[temperatureIndex]
                 }
-                let soundIndex = current.sound.todayHistory.findIndex(x => x > this.maxSoundValue && (x.reported === undefined || x.reported === false))
+                let soundIndex = current.sound.todayHistory ? current.sound.todayHistory.findIndex(x => x.value > this.maxSoundValue && (x.reported === undefined || x.reported === false)) : -1
                 if (soundIndex != -1) {
                     pets[i].sound.todayHistory[soundIndex].reported = trueValue
                     soundAlarm = current.sound.todayHistory[soundIndex]
                 }
-                let heartRateIndex = current.temperature.todayHistory.findIndex(x => x > this.maxHeartRateValue && (x.reported === undefined || x.reported === false))
+                let heartRateIndex = current.temperature.todayHistory ? current.temperature.todayHistory.findIndex(x => x.value > this.maxHeartRateValue && (x.reported === undefined || x.reported === false)) : -1
                 if (heartRateIndex != -1) {
                     pets[i].heartRate.todayHistory[heartRateIndex].reported = trueValue
                     heartRateAlarm = current.heartRate.todayHistory[heartRateIndex]
                 }
 
-
                 if (breathingAlarm || temperatureAlarm || soundAlarm || heartRateAlarm) {
                     // Buscamos relacion
                     let arrayUsersWithPet = []
                     for (let j = 0; j < users.length; j++) {
-                        let petFound = users[j].pets.find((x) => x.id === current._id)
+                        let petFound = users[j].pets.find((x) => x.id === current.id)
                         if (petFound) {
                             arrayUsersWithPet.push(users[j])
                         }
                     }
+                    
                     let alarms = {
                         breathingAlarm,
                         temperatureAlarm,
                         soundAlarm,
                         heartRateAlarm
                     }
-                    this.sendNotificationsToUsers(alarms, arrayUsersWithPet, pets[i])
+                    if (arrayUsersWithPet.length > 0) {
+                        this.sendNotificationsToUsers(alarms, arrayUsersWithPet, current)
+                    }
                     this.updatePet(current._id,pets[i])
                 }
 
