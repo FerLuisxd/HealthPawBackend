@@ -46,4 +46,6 @@ export class User {
     pets: Array<UserPet>
     @ApiProperty({ type: UserClinic })
     clinic: UserClinic
+    @ApiProperty({ example: 'askjdioasud90as90ukoasndoahnoihjoiuasdud7hxc97v97we9wwek', type: String })
+    fmcToken: string
 }

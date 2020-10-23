@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment'
 import * as momentTimeZone from 'moment-timezone'
 import { Cron } from '@nestjs/schedule';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class PetService {
@@ -401,13 +402,28 @@ export class PetService {
         }
     }
 
-    async sendNotificationsToUsers(alarms, arrayOfUsers) {
+    async sendNotificationsToUsers(alarms, arrayOfUsers, pet) {
         // (TODO) Modificar Aqui
+        let title = `Ten cuidado con ${pet.namevar}`;
+        let message = `${alarms.breathingAlarm ? 'Frecuencia respiratoria fuera de rango\n' : '\n'}${alarms.temperatureAlarm ? 'Temperatura fuera de rango\n' : '\n'}${alarms.soundAlarm ? 'Sonido fuera de rango\n' : '\n'}${alarms.heartRateAlarm ? 'Frecuencia cardiaca fuera de rango\n' : '\n'}`;
+        var tokens: string[]
+        for (let i = 0; i < arrayOfUsers.length; i++) {
+            if (arrayOfUsers[i].fmcToken) {
+                tokens.push(arrayOfUsers[i].fmcToken);
+            }
+        }
+        admin.messaging().sendMulticast({
+            tokens: tokens,
+            notification: {
+                title: title,
+                body: message,
+            },
+        });
     }
 
     @Cron('0 */15 * * * *', { 'timeZone': 'America/Lima' })
     async cronJobEvery15() {
-// Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries compelejas.
+// Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries complejas.
         let pets = await this.getPets()
         let trueValue = true
 
@@ -455,7 +471,7 @@ export class PetService {
                     soundAlarm,
                     heartRateAlarm
                 }
-                 this.sendNotificationsToUsers(alarms, arrayUsersWithPet)
+                 this.sendNotificationsToUsers(alarms, arrayUsersWithPet, pets[i])
                  this.updatePet(current._id,pets[i])
             }
             

@@ -81,9 +81,9 @@ export class UserService {
       ExpressionAttributeValues: {
         ":birthDay": body.birthDay,
         ":active": body.active,
-        ":clinic": body.clinic,
         ":email": body.email,
         ":image": body.image,
+        ":fmcToken": body.fmcToken,
         ":lastName": body.lastName,
         ":namevar": body.namevar,
         ":password": body.password,
