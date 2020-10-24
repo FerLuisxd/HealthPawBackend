@@ -19,10 +19,10 @@ export class PetService {
     constructor() {
         this.ddb = new AWS.DynamoDB.DocumentClient();
         this.intervalMax = 24 * 60 * 60 / 20
-        this.maxBreathingValue = 25
-        this.maxSoundValue = 25
-        this.maxTemperatureValue = 25
-        this.maxHeartRateValue = 25
+        this.maxBreathingValue = 35
+        this.maxSoundValue = 70
+        this.maxTemperatureValue = 39
+        this.maxHeartRateValue = 106
     }
 
     async getPets(): Promise<any> {
@@ -476,7 +476,7 @@ export class PetService {
                     if (arrayUsersWithPet.length > 0) {
                         this.sendNotificationsToUsers(alarms, arrayUsersWithPet, current)
                     }
-                    this.updatePet(current._id,pets[i])
+                    // this.updatePet(current._id,pets[i])
                 }
 
             }
