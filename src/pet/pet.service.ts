@@ -12,17 +12,9 @@ export class PetService {
     ddb: AWS.DynamoDB.DocumentClient;
     tableName: string = "pet";
     intervalMax: Number
-    maxBreathingValue: Number
-    maxSoundValue: Number
-    maxTemperatureValue: Number
-    maxHeartRateValue: Number
     constructor() {
         this.ddb = new AWS.DynamoDB.DocumentClient();
         this.intervalMax = 24 * 60 * 60 / 20
-        this.maxBreathingValue = 35
-        this.maxSoundValue = 70
-        this.maxTemperatureValue = 39
-        this.maxHeartRateValue = 106
     }
 
     async getPets(): Promise<any> {
@@ -424,7 +416,7 @@ export class PetService {
 
     @Cron('0 */15 * * * *', { 'timeZone': 'America/Lima' })
     async cronJobEvery15() {
-        // Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries compelejas.
+        // Esto no escala bien, muchos fors, desventaja ALTA de DynamoDB, recomendacion cambiar a Mongo para queries complejas.
         try {
             let pets = await this.getPets()
             let trueValue = true
@@ -436,22 +428,41 @@ export class PetService {
                 let temperatureAlarm
                 let soundAlarm
                 let heartRateAlarm
-                let breathingIndex = current.breathingFrequency.todayHistory ? current.breathingFrequency.todayHistory.findIndex(x => x.value > this.maxBreathingValue && (x.reported === undefined || x.reported === false)) : -1
+
+                let minHeartRateValue = 98
+                let maxHeartRateValue = 106
+                let minBreathingValue = 14
+                let maxBreathingValue = 35
+                let minTemperatureValue = 37
+                let maxTemperatureValue = 39
+                let maxSoundValue = 70
+
+                if (current.petType && current.petType == "Gato"){
+                    minHeartRateValue = 140
+                    maxHeartRateValue = 144
+                    minBreathingValue = 8
+                    maxBreathingValue = 35
+                    minTemperatureValue = 37
+                    maxTemperatureValue = 39
+                    maxSoundValue = 70
+                }
+
+                let breathingIndex = current.breathingFrequency.todayHistory ? current.breathingFrequency.todayHistory.findIndex(x => (x.value < minBreathingValue || x.value > maxBreathingValue) && (x.reported === undefined || x.reported === false)) : -1
                 if (breathingIndex != -1) {
                     pets[i].breathingFrequency.todayHistory[breathingIndex].reported = trueValue
                     breathingAlarm = current.breathingFrequency.todayHistory[breathingIndex]
                 }
-                let temperatureIndex = current.temperature.todayHistory ? current.temperature.todayHistory.findIndex(x => x.value > this.maxTemperatureValue && (x.reported === undefined || x.reported === false)) : -1
+                let temperatureIndex = current.temperature.todayHistory ? current.temperature.todayHistory.findIndex(x => (x.value < minTemperatureValue || x.value > maxTemperatureValue) && (x.reported === undefined || x.reported === false)) : -1
                 if (temperatureIndex != -1) {
                     pets[i].temperature.todayHistory[temperatureIndex].reported = trueValue
                     temperatureAlarm = current.temperature.todayHistory[temperatureIndex]
                 }
-                let soundIndex = current.sound.todayHistory ? current.sound.todayHistory.findIndex(x => x.value > this.maxSoundValue && (x.reported === undefined || x.reported === false)) : -1
+                let soundIndex = current.sound.todayHistory ? current.sound.todayHistory.findIndex(x => x.value > maxSoundValue && (x.reported === undefined || x.reported === false)) : -1
                 if (soundIndex != -1) {
                     pets[i].sound.todayHistory[soundIndex].reported = trueValue
                     soundAlarm = current.sound.todayHistory[soundIndex]
                 }
-                let heartRateIndex = current.temperature.todayHistory ? current.temperature.todayHistory.findIndex(x => x.value > this.maxHeartRateValue && (x.reported === undefined || x.reported === false)) : -1
+                let heartRateIndex = current.temperature.todayHistory ? current.temperature.todayHistory.findIndex(x => (x.value < minHeartRateValue || x.value > maxHeartRateValue) && (x.reported === undefined || x.reported === false)) : -1
                 if (heartRateIndex != -1) {
                     pets[i].heartRate.todayHistory[heartRateIndex].reported = trueValue
                     heartRateAlarm = current.heartRate.todayHistory[heartRateIndex]
