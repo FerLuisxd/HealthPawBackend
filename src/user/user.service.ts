@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException, BadRequestException, UnauthorizedException, HttpException } from '@nestjs/common';
 import * as AWS from 'aws-sdk'
-import { User } from './user.entity';
+import { User, UserNotification } from './user.entity';
 import * as bcryptjs from 'bcryptjs'
 import * as moment from 'moment'
+import * as admin from 'firebase-admin';
 @Injectable()
 export class UserService {
   ddb: AWS.DynamoDB.DocumentClient
@@ -148,6 +149,26 @@ export class UserService {
     }
     else throw new NotFoundException()
   }
+
+  async sendGlobalNotification(notification: UserNotification): Promise<any> {
+    let users = (await this.ddb.scan({ TableName: "user" }).promise()).Items;
+    let tokens = [];
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].fmcToken) {
+        tokens.push(users[i].fmcToken);
+      }
+    }
+    if (tokens.length > 0) {
+      admin.messaging().sendMulticast({
+        tokens: tokens,
+        notification: {
+            title: notification.title,
+            body: notification.message,
+        },
+    });
+    }
+  }
+
   deleteUser(id: string): any {
     return {}
   }

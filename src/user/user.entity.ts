@@ -15,6 +15,13 @@ export class UserPet {
     namevar: string
 }
 
+export class UserNotification {
+    @ApiProperty({ example: 'Test Title', type: String })
+    title: string
+    @ApiProperty({ example: 'Test Body', type: String })
+    message: string
+}
+
 export class User {
     @ApiProperty({ example: 'namevar', type: String })
     namevar: string

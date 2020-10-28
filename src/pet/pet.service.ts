@@ -405,13 +405,15 @@ export class PetService {
             }
         }
         
-        admin.messaging().sendMulticast({
-            tokens: tokens,
-            notification: {
-                title: title,
-                body: message,
-            },
-        });
+        if (tokens.length > 0) {
+            admin.messaging().sendMulticast({
+                tokens: tokens,
+                notification: {
+                    title: title,
+                    body: message,
+                },
+            });
+        }
     }
 
     @Cron('0 */15 * * * *', { 'timeZone': 'America/Lima' })

@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User, UserPet } from './user.entity';
+import { User, UserNotification, UserPet } from './user.entity';
 import { ApiParam, ApiResponse } from '@nestjs/swagger';
 
 @Controller('user')
@@ -22,7 +22,7 @@ export class UserController {
     return await this.userService.addUser(body);
   }
   @Post('/login')
-  async login(@Body() body: User) {
+  async sendGlobalNotification(@Body() body: User) {
     return await this.userService.login(body);
   }
   @Put('/:id')
@@ -43,5 +43,8 @@ export class UserController {
   async deleteUser(@Param('id') id: string) {
     return this.userService.deleteUser(id);
   }
-
+  @Post('/sendGlobalNotification')
+  async login(@Body() body: UserNotification) {
+    return await this.userService.sendGlobalNotification(body);
+  }
 }
