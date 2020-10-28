@@ -43,8 +43,4 @@ export class UserController {
   async deleteUser(@Param('id') id: string) {
     return this.userService.deleteUser(id);
   }
-  @Post('/sendGlobalNotification')
-  async login(@Body() body: UserNotification) {
-    return await this.userService.sendGlobalNotification(body);
-  }
 }

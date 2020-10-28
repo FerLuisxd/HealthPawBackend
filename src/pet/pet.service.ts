@@ -6,14 +6,17 @@ import * as moment from 'moment'
 import * as momentTimeZone from 'moment-timezone'
 import { Cron } from '@nestjs/schedule';
 import * as admin from 'firebase-admin';
+import { GlobalNotificationService } from 'src/global-notification/global-notification.service';
 
 @Injectable()
 export class PetService {
     ddb: AWS.DynamoDB.DocumentClient;
+    globalNotificationService: GlobalNotificationService;
     tableName: string = "pet";
     intervalMax: Number
     constructor() {
         this.ddb = new AWS.DynamoDB.DocumentClient();
+        this.globalNotificationService = new GlobalNotificationService();
         this.intervalMax = 24 * 60 * 60 / 20
     }
 
@@ -493,6 +496,7 @@ export class PetService {
                 }
 
             }
+            this.globalNotificationService.sendGlobalNotification()
         }
         catch (e) {
             console.log('ERROR CRONJOB', e)
