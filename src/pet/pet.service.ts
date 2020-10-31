@@ -400,22 +400,22 @@ export class PetService {
     async sendNotificationsToUsers(alarms, arrayOfUsers, pet) {
         // (TODO) Modificar Aqui
         let title = `Ten cuidado con ${pet.namevar}`;
-        let message = `${alarms.breathingAlarm ? 'Frecuencia respiratoria fuera de rango\n' : ''}${alarms.temperatureAlarm ? 'Temperatura fuera de rango\n' : ''}${alarms.soundAlarm ? 'Sonido fuera de rango\n' : ''}${alarms.heartRateAlarm ? 'Frecuencia cardiaca fuera de rango\n' : ''}`;
+        let body = `${alarms.breathingAlarm ? 'Frecuencia respiratoria fuera de rango\n' : ''}${alarms.temperatureAlarm ? 'Temperatura fuera de rango\n' : ''}${alarms.soundAlarm ? 'Sonido fuera de rango\n' : ''}${alarms.heartRateAlarm ? 'Frecuencia cardiaca fuera de rango\n' : ''}`;
         let tokens = []
         for (let i = 0; i < arrayOfUsers.length; i++) {
             if (arrayOfUsers[i].fmcToken) {
                 tokens.push(arrayOfUsers[i].fmcToken);
             }
         }
-        
         if (tokens.length > 0) {
-            admin.messaging().sendMulticast({
+            const message = {
                 tokens: tokens,
                 notification: {
                     title: title,
-                    body: message,
+                    body: body,
                 },
-            });
+              };
+            admin.messaging().sendMulticast(message);
         }
     }
 
@@ -467,7 +467,7 @@ export class PetService {
                     pets[i].sound.todayHistory[soundIndex].reported = trueValue
                     soundAlarm = current.sound.todayHistory[soundIndex]
                 }
-                let heartRateIndex = current.temperature.todayHistory ? current.temperature.todayHistory.findIndex(x => (x.value < minHeartRateValue || x.value > maxHeartRateValue) && (x.reported === undefined || x.reported === false)) : -1
+                let heartRateIndex = current.heartRate.todayHistory ? current.heartRate.todayHistory.findIndex(x => (x.value < minHeartRateValue || x.value > maxHeartRateValue) && (x.reported === undefined || x.reported === false)) : -1
                 if (heartRateIndex != -1) {
                     pets[i].heartRate.todayHistory[heartRateIndex].reported = trueValue
                     heartRateAlarm = current.heartRate.todayHistory[heartRateIndex]
@@ -496,12 +496,11 @@ export class PetService {
                 }
 
             }
-            this.globalNotificationService.sendGlobalNotification()
         }
         catch (e) {
             console.log('ERROR CRONJOB', e)
         }
-
+        this.globalNotificationService.sendGlobalNotification()
     }
 
 }

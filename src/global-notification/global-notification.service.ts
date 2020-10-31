@@ -24,9 +24,10 @@ export class GlobalNotificationService {
 
     async sendGlobalNotification(): Promise<any> {
         let today = new Date();
+        today.setSeconds(0,0);
         let users = (await this.ddb.scan({ TableName: "user" }).promise()).Items;
         let globalNotifications = (await this.ddb.scan({ TableName: "globalNotification" }).promise()).Items;
-        let tokens = [];
+        var tokens: string[] = [];
         for (let i = 0; i < users.length; i++) {
             if (users[i].fmcToken) {
                 tokens.push(users[i].fmcToken);
@@ -35,16 +36,21 @@ export class GlobalNotificationService {
         if (tokens.length > 0) {
             for (let i = 0; i < globalNotifications.length; i++) {
                 let date = new Date(globalNotifications[i].date);
-                let diffMs = today.getMilliseconds() - date.getMilliseconds();
-                var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-                if (diffMins == 0) {
-                    admin.messaging().sendMulticast({
+                let sameYear = today.getFullYear() == date.getFullYear();
+                let sameMonth = today.getMonth() == date.getMonth();
+                let sameDay = today.getDay() == date.getDay();
+                let sameHour = today.getHours() == date.getHours();
+                let sameMinute = today.getMinutes() == date.getMinutes();
+                let sameDate = sameYear && sameMonth && sameDay && sameHour && sameMinute;
+                if (sameDate) {
+                    const message = {
                         tokens: tokens,
                         notification: {
                             title: globalNotifications[i].title,
                             body: globalNotifications[i].body,
                         },
-                    });
+                      };
+                    admin.messaging().sendMulticast(message);
                 }
             }
         }
